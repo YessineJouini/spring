@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute; 
@@ -19,10 +20,14 @@ public class ProduitController {
 @Autowired
 ProduitService produitService;
 @RequestMapping("/ListeProduits")
-public String listeProduits(ModelMap modelMap)
+public String listeProduits(ModelMap modelMap,
+@RequestParam (name="page",defaultValue = "0") int page, 
+@RequestParam (name="size", defaultValue = "2") int size)
 {
-List<Produit> prods = produitService.getAllProduits(); 
-modelMap.addAttribute("produits", prods);
+Page<Produit> prods = produitService.getAllProduitsParPage(page, size); 
+modelMap.addAttribute("produits", prods); 
+modelMap.addAttribute("pages", new int[prods.getTotalPages()]); 
+modelMap.addAttribute("currentPage", page);
 return "listeProduits";
 }
 @RequestMapping("/showCreate")
@@ -45,14 +50,19 @@ modelMap.addAttribute("msg", msg);
 return "createProduit";
 }
 @RequestMapping("/supprimerProduit")
-public String supprimerProduit(@RequestParam("id") Long id,
-ModelMap modelMap)
+public String supprimerProduit(@RequestParam("id") Long id, 
+ModelMap modelMap,
+@RequestParam (name="page",defaultValue = "0") int page, 
+@RequestParam (name="size", defaultValue = "2") int size)
 {
-produitService.deleteProduitById(id);
-List<Produit> prods = produitService.getAllProduits(); 
-modelMap.addAttribute("produits", prods);
-return "listeProduits";
-}
+produitService.deleteProduitById(id);Page<Produit> prods = produitService.getAllProduitsParPage(page,
+		size);
+		modelMap.addAttribute("produits", prods); 
+		modelMap.addAttribute("pages", new int[prods.getTotalPages()]); 
+		modelMap.addAttribute("currentPage", page); 
+		modelMap.addAttribute("size", size);
+		return "listeProduits";
+		}
 @RequestMapping("/modifierProduit")
 public String editerProduit(@RequestParam("id") Long id,
 ModelMap modelMap)

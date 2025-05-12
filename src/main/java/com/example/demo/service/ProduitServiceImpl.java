@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entites.Produit;
@@ -42,5 +44,9 @@ public class ProduitServiceImpl implements ProduitService {
     @Override
     public List<Produit> getAllProduits() {
         return produitRepository.findAll();
+    }
+    @Override
+    public Page<Produit> getAllProduitsParPage(int page, int size) {
+    return produitRepository.findAll(PageRequest.of(page, size));
     }
 }
