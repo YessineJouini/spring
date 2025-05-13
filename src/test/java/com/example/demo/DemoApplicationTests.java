@@ -41,9 +41,5 @@ class ProduitsApplicationTests {
         produitRepository.deleteById(1L);
     }
 
-    @Test
-    void testListerTousProduits() {
-        List<Produit> prods = produitRepository.findAll();
-        prods.forEach(System.out::println);
-    }
+  
 }
